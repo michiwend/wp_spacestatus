@@ -49,7 +49,7 @@ function wp_spacestatus_spaceapi_section_text() {
 
 function wp_spacestatus_api_url_string() {
     $options = get_option('wp_spacestatus_options');
-    echo "<input id='wp_spacestatus_api_url_string' name='wp_spacestatus_options[api_url_string]' size='100' type='text' value='{$options['api_url_string']}' />";
+    echo "<input id='wp_spacestatus_api_url_string' name='wp_spacestatus_options[api_url_string]' size='80' type='text' value='{$options['api_url_string']}' />";
 }
 
 
@@ -71,7 +71,29 @@ function wp_spacestatus_textstatus_closed_string() {
     echo "<input id='wp_spacestatus_textstatus_closed_string' name='wp_spacestatus_options[textstatus_closed_string]' size='20' type='text' value='{$options['textstatus_closed_string']}' />";
 }
 
+function wp_spacestatus_icon_open_url() {
+    $options = get_option('wp_spacestatus_options');
+    if( $options['icon_open_url'] == "" ) $options['icon_open_url'] = plugins_url()."/wp_spacestatus/icons/open.png";
+    echo "<input id='wp_spacestatus_icon_open_url' name='wp_spacestatus_options[icon_open_url]' size='80' type='text' value='{$options['icon_open_url']}' /> ";
+    echo "<img style=\"width: 25px; height: 25px; vertical-align: middle;\"src=\"".$options['icon_open_url']."\" alt=\"\" title=\"\" /> ";
+    echo "<input style=\"margin-left: 20px;\" type=\"button\" class=\"button button-primary\" value=\"Upload one...\"  />";
+}
 
+function wp_spacestatus_icon_closed_url() {
+    $options = get_option('wp_spacestatus_options');
+    if( $options['icon_closed_url'] == "" ) $options['icon_closed_url'] = plugins_url()."/wp_spacestatus/icons/closed.png";
+    echo "<input id='wp_spacestatus_icon_closed_url' name='wp_spacestatus_options[icon_closed_url]' size='80' type='text' value='{$options['icon_closed_url']}' /> ";
+    echo "<img style=\"width: 25px; height: 25px; vertical-align: middle;\"src=\"".$options['icon_closed_url']."\" alt=\"\" title=\"\" /> ";
+    echo "<input style=\"margin-left: 20px;\" type=\"button\" class=\"button button-primary\" value=\"Upload one...\"  />";
+}
+
+function wp_spacestatus_icon_unknown_url() {
+    $options = get_option('wp_spacestatus_options');
+    if( $options['icon_unknown_url'] == "" ) $options['icon_unknown_url'] = plugins_url()."/wp_spacestatus/icons/unknown.png";
+    echo "<input id='wp_spacestatus_icon_unknown_url' name='wp_spacestatus_options[icon_unknown_url]' size='80' type='text' value='{$options['icon_unknown_url']}' /> ";
+    echo "<img style=\"width: 25px; height: 25px; vertical-align: middle;\"src=\"".$options['icon_unknown_url']."\" alt=\"\" title=\"\" /> ";
+    echo "<input style=\"margin-left: 20px;\" type=\"button\" class=\"button button-primary\" value=\"Upload one...\"  />";
+}
 
 // add the admin settings and such
 add_action('admin_init', 'plugin_admin_init');
@@ -84,14 +106,22 @@ function plugin_admin_init() {
     add_settings_section('wp_spacestatus_appearance_section', 'Appearance', 'wp_spacestatus_appearance_section_text', 'wp_spacestatus');
     add_settings_field('wp_spacestatus_textstatus_open', 'Text status <em>open</em>', 'wp_spacestatus_textstatus_open_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_textstatus_closed', 'Text status <em>closed</em>', 'wp_spacestatus_textstatus_closed_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_icon_open_url', 'Icon <em>open</em>', 'wp_spacestatus_icon_open_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_icon_closed_url', 'Icon <em>closed</em>', 'wp_spacestatus_icon_closed_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_icon_unknown_url', 'Icon <em>unknown</em>', 'wp_spacestatus_icon_unknown_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
 }
 
 // validate our options
 function plugin_options_validate($input) {
     // FIXME throw an error, not just return an empty string
     $newinput['api_url_string'] = esc_url($input['api_url_string'], array('http', 'https'));
-    $newinput['textstatus_open_string'] = $input['textstatus_open_string']; //FIXME validate
+
+    $newinput['textstatus_open_string']   = $input['textstatus_open_string']; //FIXME validate
     $newinput['textstatus_closed_string'] = $input['textstatus_closed_string']; //FIXME validate
+
+    $newinput['icon_open_url']    = $input['icon_open_url']; //FIXME validate
+    $newinput['icon_closed_url']  = $input['icon_closed_url']; //FIXME validate
+    $newinput['icon_unknown_url'] = $input['icon_unknown_url']; //FIXME validate
 
     return $newinput;
 }
