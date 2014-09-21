@@ -2,7 +2,7 @@
 /*  Copyright (c) 2014  Michael Wendland
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -30,27 +30,12 @@
 
 include('settings.php');
 
-/*
-$args = array(
-    'timeout'     => 5,
-    'redirection' => 5,
-    'httpversion' => '1.0',
-    'user-agent'  => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
-    'blocking'    => true,
-    'headers'     => array(),
-    'cookies'     => array(),
-    'body'        => null,
-    'compress'    => false,
-    'decompress'  => true,
-    'sslverify'   => true,
-    'stream'      => false,
-    'filename'    => null
-);*/
 
 function get_spacestatus() {
 
     $options = get_option('wp_spacestatus_options');
 
+    // FIXME set timeout, useragent, etc.
     $api_response = wp_remote_get( $options['api_url_string'] );
 
     $rsp_code = wp_remote_retrieve_response_code( &$api_response );
@@ -58,7 +43,10 @@ function get_spacestatus() {
     $rsp_body = wp_remote_retrieve_body( &$api_response );
 
     if( $rsp_code != 200) {
-        return new WP_ERROR('api_call_failed', "Failed calling ".$options['api_url_string'], $rsp_msg );
+        return new WP_ERROR(
+            'api_call_failed',
+            "Failed calling ".$options['api_url_string'],
+            $rsp_msg );
     }
 
     return json_decode( $rsp_body )->open;
@@ -74,8 +62,9 @@ function spacestatus_shortcode( $atts ) {
         'class' => '',
         'id'    => '',
     ), $atts );
- 
-    $icon_baseurl = plugins_url()."/wp_spacestatus/status_icons"; // FIXME let user upload status icons
+
+    // FIXME let user upload status icons
+    $icon_baseurl = plugins_url()."/wp_spacestatus/status_icons";
     $imgtag_begin = '<img id="'.$a['id'].'" class="'.$a['class'].'" src="'.$icon_baseurl."/";
 
     $status = get_spacestatus();
@@ -87,19 +76,36 @@ function spacestatus_shortcode( $atts ) {
     if( $status ) {
 
         switch( $a['type'] ) {
-            case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />" ; break;
-            case 'icon_small':  $out = $imgtag_begin."open_small.png\" alt=\"Space status open icon\" />"; break;
-            case 'text':        $out = $options['textstatus_open_string']; break;
-            default:            $out = "undefined shortcode param"; break;
+        case 'icon_large':
+            $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />";
+            break;
+        case 'icon_small':
+            $out = $imgtag_begin."open_small.png\" alt=\"Space status open icon\" />";
+            break;
+        case 'text':
+            $out = $options['textstatus_open_string'];
+            break;
+        default:
+            $out = "undefined shortcode param";
+            break;
         }
+
     }
     else {
 
         switch( $a['type'] ) {
-            case 'icon_large':  $out = $imgtag_begin."closed_large.png\" alt=\"Space status closed icon\" />"; break;
-            case 'icon_small':  $out = $imgtag_begin."closed_small.png\" alt=\"Space status closed icon\" />"; break;
-            case 'text':        $out = $options['textstatus_closed_string']; break;
-            default:            $out = "undefined shortcode param"; break;
+        case 'icon_large':
+            $out = $imgtag_begin."closed_large.png\" alt=\"Space status closed icon\" />";
+            break;
+        case 'icon_small':
+            $out = $imgtag_begin."closed_small.png\" alt=\"Space status closed icon\" />";
+            break;
+        case 'text':
+            $out = $options['textstatus_closed_string'];
+            break;
+        default:
+            $out = "undefined shortcode param";
+            break;
         }
 
     }
@@ -107,8 +113,6 @@ function spacestatus_shortcode( $atts ) {
     return $out;
 }
 
-
 add_shortcode('space_status', 'spacestatus_shortcode');
-
 
 ?>

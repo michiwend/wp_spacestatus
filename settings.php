@@ -42,7 +42,7 @@ function wp_spacestatus_options_page() {
 
 
 
-// SpaceAPI section
+// SpaceAPI section ////////////////////////////////////////////////////////////
 function wp_spacestatus_spaceapi_section_text() {
     echo '<p>Options relating your SpaceAPI instance.</p>';
 }
@@ -54,7 +54,7 @@ function wp_spacestatus_api_url_string() {
 
 
 
-// Appearance section
+// Appearance section //////////////////////////////////////////////////////////
 function wp_spacestatus_appearance_section_text() {
     echo '<p>Define how the space status gets displayed.</p>';
 }
