@@ -64,7 +64,7 @@ function spacestatus_shortcode( $atts ) {
     ), $atts );
 
     // FIXME let user upload status icons
-    $icon_baseurl = plugins_url()."/wp_spacestatus/status_icons";
+    $icon_baseurl = plugins_url()."/wp_spacestatus/icons";
     $imgtag_begin = '<img id="'.$a['id'].'" class="'.$a['class'].'" src="'.$icon_baseurl."/";
 
     $status = get_spacestatus();
