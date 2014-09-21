@@ -28,4 +28,73 @@
  *  License: GPL2
  */
 
+
+$args = array(
+    'timeout'     => 5,
+    'redirection' => 5,
+    'httpversion' => '1.0',
+    'user-agent'  => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
+    'blocking'    => true,
+    'headers'     => array(),
+    'cookies'     => array(),
+    'body'        => null,
+    'compress'    => false,
+    'decompress'  => true,
+    'sslverify'   => true,
+    'stream'      => false,
+    'filename'    => null
+);
+
+
+function spacestatus_shortcode( $atts ) {
+    
+    $url = 'http://files.michiwend.com/fakeapi/data.json';
+
+    $a = shortcode_atts( array(
+        'type'  => 'icon_large',
+        'class' => '',
+        'id'    => '',
+    ), $atts );
+
+    $api_response = wp_remote_get( $url );
+
+    $rsp_code = wp_remote_retrieve_response_code( &$api_response );
+    $rsp_body = wp_remote_retrieve_body( &$api_response );
+
+    if( $rsp_code != 200) {
+        return 'API-call failed';
+    }
+
+    $labstate_open = json_decode( $rsp_body )->open;
+
+    $icon_baseurl = plugins_url()."/wp_spacestatus/status_icons"; // FIXME let user upload status icons
+    $imgtag_begin = '<img id="'.$a['id'].'" class="'.$a['class'].'" src="'.$icon_baseurl."/";
+
+    if( $labstate_open ) {
+
+        switch( $a['type'] ) {
+            case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Labstatus: Geöffnet!\" />" ; break;
+            case 'icon_small':  $out = $imgtag_begin."open_small.png\" alt=\"Labstatus: Geöffnet!\" />"; break;
+            case 'text':        $out = "Geöffnet!"; break;
+            default:            $out = "undefined param"; break;
+        }
+    }
+    else {
+
+        switch( $a['type'] ) {
+            case 'icon_large':  $out = $imgtag_begin."closed_large.png\" alt=\"Labstatus: Geschlossen.\" />"; break;
+            case 'icon_small':  $out = $imgtag_begin."closed_small.png\" alt=\"Labstatus: Geschlossen.\" />"; break;
+            case 'text':        $out = "Geschlossen."; break;
+            default:            $out = "undefined param"; break;
+        }
+
+    }
+
+    return $out;
+}
+
+
+add_shortcode('space_status', 'spacestatus_shortcode');
+
+
 ?>
