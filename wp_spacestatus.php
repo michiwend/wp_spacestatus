@@ -28,7 +28,9 @@
  *  License: GPL2
  */
 
+include('settings.php');
 
+/*
 $args = array(
     'timeout'     => 5,
     'redirection' => 5,
@@ -43,12 +45,11 @@ $args = array(
     'sslverify'   => true,
     'stream'      => false,
     'filename'    => null
-);
+);*/
 
 
 function spacestatus_shortcode( $atts ) {
-    
-    $url = 'http://files.michiwend.com/fakeapi/data.json';
+    $options = get_option('wp_spacestatus_options');
 
     $a = shortcode_atts( array(
         'type'  => 'icon_large',
@@ -56,7 +57,7 @@ function spacestatus_shortcode( $atts ) {
         'id'    => '',
     ), $atts );
 
-    $api_response = wp_remote_get( $url );
+    $api_response = wp_remote_get( $options['api_url_string'] );
 
     $rsp_code = wp_remote_retrieve_response_code( &$api_response );
     $rsp_body = wp_remote_retrieve_body( &$api_response );
