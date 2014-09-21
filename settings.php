@@ -40,6 +40,9 @@ function wp_spacestatus_options_page() {
 <?php
 }
 
+
+
+// SpaceAPI section
 function wp_spacestatus_spaceapi_section_text() {
     echo '<p>Options relating your SpaceAPI instance.</p>';
 }
@@ -49,18 +52,47 @@ function wp_spacestatus_api_url_string() {
     echo "<input id='wp_spacestatus_api_url_string' name='wp_spacestatus_options[api_url_string]' size='100' type='text' value='{$options['api_url_string']}' />";
 }
 
+
+
+// Appearance section
+function wp_spacestatus_appearance_section_text() {
+    echo '<p>Define how the space status gets displayed.</p>';
+}
+
+function wp_spacestatus_textstatus_open_string() {
+    $options = get_option('wp_spacestatus_options');
+    if( $options['textstatus_open_string'] == "" ) $options['textstatus_open_string'] = "Open!"; 
+    echo "<input id='wp_spacestatus_textstatus_open_string' name='wp_spacestatus_options[textstatus_open_string]' size='20' type='text' value='{$options['textstatus_open_string']}' />";
+}
+
+function wp_spacestatus_textstatus_closed_string() {
+    $options = get_option('wp_spacestatus_options');
+    if( $options['textstatus_closed_string'] == "" ) $options['textstatus_closed_string'] = "Closed.";
+    echo "<input id='wp_spacestatus_textstatus_closed_string' name='wp_spacestatus_options[textstatus_closed_string]' size='20' type='text' value='{$options['textstatus_closed_string']}' />";
+}
+
+
+
 // add the admin settings and such
 add_action('admin_init', 'plugin_admin_init');
 function plugin_admin_init() {
     register_setting( 'wp_spacestatus_options', 'wp_spacestatus_options', 'plugin_options_validate' );
+
     add_settings_section('wp_spacestatus_spaceapi_section', 'SpaceAPI', 'wp_spacestatus_spaceapi_section_text', 'wp_spacestatus');
     add_settings_field('wp_spacestatus_api_url', 'SpaceAPI URL', 'wp_spacestatus_api_url_string', 'wp_spacestatus', 'wp_spacestatus_spaceapi_section');
+    
+    add_settings_section('wp_spacestatus_appearance_section', 'Appearance', 'wp_spacestatus_appearance_section_text', 'wp_spacestatus');
+    add_settings_field('wp_spacestatus_textstatus_open', 'Text status <em>open</em>', 'wp_spacestatus_textstatus_open_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_textstatus_closed', 'Text status <em>closed</em>', 'wp_spacestatus_textstatus_closed_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
 }
 
 // validate our options
 function plugin_options_validate($input) {
     // FIXME throw an error, not just return an empty string
     $newinput['api_url_string'] = esc_url($input['api_url_string'], array('http', 'https'));
+    $newinput['textstatus_open_string'] = $input['textstatus_open_string']; //FIXME validate
+    $newinput['textstatus_closed_string'] = $input['textstatus_closed_string']; //FIXME validate
+
     return $newinput;
 }
 

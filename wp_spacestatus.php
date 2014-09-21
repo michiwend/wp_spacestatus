@@ -74,18 +74,18 @@ function spacestatus_shortcode( $atts ) {
     if( $labstate_open ) {
 
         switch( $a['type'] ) {
-            case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Labstatus: Geöffnet!\" />" ; break;
-            case 'icon_small':  $out = $imgtag_begin."open_small.png\" alt=\"Labstatus: Geöffnet!\" />"; break;
-            case 'text':        $out = "Geöffnet!"; break;
+            case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />" ; break;
+            case 'icon_small':  $out = $imgtag_begin."open_small.png\" alt=\"Space status open icon\" />"; break;
+            case 'text':        $out = $options['textstatus_open_string']; break;
             default:            $out = "undefined param"; break;
         }
     }
     else {
 
         switch( $a['type'] ) {
-            case 'icon_large':  $out = $imgtag_begin."closed_large.png\" alt=\"Labstatus: Geschlossen.\" />"; break;
-            case 'icon_small':  $out = $imgtag_begin."closed_small.png\" alt=\"Labstatus: Geschlossen.\" />"; break;
-            case 'text':        $out = "Geschlossen."; break;
+            case 'icon_large':  $out = $imgtag_begin."closed_large.png\" alt=\"Space status closed icon\" />"; break;
+            case 'icon_small':  $out = $imgtag_begin."closed_small.png\" alt=\"Space status closed icon\" />"; break;
+            case 'text':        $out = $options['textstatus_closed_string']; break;
             default:            $out = "undefined param"; break;
         }
 
