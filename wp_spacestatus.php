@@ -54,10 +54,11 @@ function get_spacestatus() {
     $api_response = wp_remote_get( $options['api_url_string'] );
 
     $rsp_code = wp_remote_retrieve_response_code( &$api_response );
+    $rsp_msg  = wp_remote_retrieve_response_message( &$api_response );
     $rsp_body = wp_remote_retrieve_body( &$api_response );
 
     if( $rsp_code != 200) {
-        return 'API-call failed';
+        return new WP_ERROR('api_call_failed', "Failed calling ".$options['api_url_string'], $rsp_msg );
     }
 
     return json_decode( $rsp_body )->open;
@@ -79,13 +80,17 @@ function spacestatus_shortcode( $atts ) {
 
     $status = get_spacestatus();
 
+    if( is_wp_error( $status ) ) {
+        return $status->get_error_message();
+    }
+
     if( $status ) {
 
         switch( $a['type'] ) {
             case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />" ; break;
             case 'icon_small':  $out = $imgtag_begin."open_small.png\" alt=\"Space status open icon\" />"; break;
             case 'text':        $out = $options['textstatus_open_string']; break;
-            default:            $out = "undefined param"; break;
+            default:            $out = "undefined shortcode param"; break;
         }
     }
     else {
@@ -94,7 +99,7 @@ function spacestatus_shortcode( $atts ) {
             case 'icon_large':  $out = $imgtag_begin."closed_large.png\" alt=\"Space status closed icon\" />"; break;
             case 'icon_small':  $out = $imgtag_begin."closed_small.png\" alt=\"Space status closed icon\" />"; break;
             case 'text':        $out = $options['textstatus_closed_string']; break;
-            default:            $out = "undefined param"; break;
+            default:            $out = "undefined shortcode param"; break;
         }
 
     }
