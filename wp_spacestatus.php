@@ -53,6 +53,20 @@ function get_spacestatus() {
 }
 
 
+function icon_builder($status, $size, $class, $id) {
+
+    // TODO get icons from options.
+    $icon['open']['large']   = "open_large.png";
+    $icon['open']['small']   = "open_small.png";
+    $icon['closed']['large'] = "closed_large.png";
+    $icon['closed']['small'] = "closed_small.png";
+
+    $icon_baseurl = plugins_url()."/wp_spacestatus/icons";
+
+    return "<img id=\"$id\" class=\"$class\" src=\"".$icon_baseurl."/".$icon[$status][$size]."\" alt=\"Space status $status icon\" />";
+}
+
+
 function spacestatus_shortcode( $atts ) {
 
     $options = get_option('wp_spacestatus_options');
@@ -63,13 +77,10 @@ function spacestatus_shortcode( $atts ) {
         'id'    => '',
     ), $atts );
 
-    // FIXME let user upload status icons
-    $icon_baseurl = plugins_url()."/wp_spacestatus/icons";
-    $imgtag_begin = '<img id="'.$a['id'].'" class="'.$a['class'].'" src="'.$icon_baseurl."/";
-
     $status = get_spacestatus();
 
     if( is_wp_error( $status ) ) {
+        // FIXME return the unknown icon
         return $status->get_error_message();
     }
 
@@ -77,10 +88,10 @@ function spacestatus_shortcode( $atts ) {
 
         switch( $a['type'] ) {
         case 'icon_large':
-            $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />";
+            $out = icon_builder('open', 'large', $a['class'], $a['id']);
             break;
         case 'icon_small':
-            $out = $imgtag_begin."open_small.png\" alt=\"Space status open icon\" />";
+            $out = icon_builder('open', 'small', $a['class'], $a['id']);
             break;
         case 'text':
             $out = $options['textstatus_open_string'];
@@ -95,10 +106,10 @@ function spacestatus_shortcode( $atts ) {
 
         switch( $a['type'] ) {
         case 'icon_large':
-            $out = $imgtag_begin."closed_large.png\" alt=\"Space status closed icon\" />";
+            $out = icon_builder('closed', 'large', $a['class'], $a['id']);
             break;
         case 'icon_small':
-            $out = $imgtag_begin."closed_small.png\" alt=\"Space status closed icon\" />";
+            $out = icon_builder('closed', 'small', $a['class'], $a['id']);
             break;
         case 'text':
             $out = $options['textstatus_closed_string'];
