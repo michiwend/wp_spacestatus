@@ -47,15 +47,9 @@ $args = array(
     'filename'    => null
 );*/
 
+function get_spacestatus() {
 
-function spacestatus_shortcode( $atts ) {
     $options = get_option('wp_spacestatus_options');
-
-    $a = shortcode_atts( array(
-        'type'  => 'icon_large',
-        'class' => '',
-        'id'    => '',
-    ), $atts );
 
     $api_response = wp_remote_get( $options['api_url_string'] );
 
@@ -66,12 +60,26 @@ function spacestatus_shortcode( $atts ) {
         return 'API-call failed';
     }
 
-    $labstate_open = json_decode( $rsp_body )->open;
+    return json_decode( $rsp_body )->open;
+}
 
+
+function spacestatus_shortcode( $atts ) {
+
+    $options = get_option('wp_spacestatus_options');
+
+    $a = shortcode_atts( array(
+        'type'  => 'icon_large',
+        'class' => '',
+        'id'    => '',
+    ), $atts );
+ 
     $icon_baseurl = plugins_url()."/wp_spacestatus/status_icons"; // FIXME let user upload status icons
     $imgtag_begin = '<img id="'.$a['id'].'" class="'.$a['class'].'" src="'.$icon_baseurl."/";
 
-    if( $labstate_open ) {
+    $status = get_spacestatus();
+
+    if( $status ) {
 
         switch( $a['type'] ) {
             case 'icon_large':  $out = $imgtag_begin."open_large.png\" alt=\"Space status open icon\" />" ; break;
