@@ -84,41 +84,27 @@ function spacestatus_shortcode( $atts ) {
         return $status->get_error_message();
     }
 
-    if( $status ) {
-
-        switch( $a['type'] ) {
-        case 'icon_large':
-            $out = icon_builder('open', 'large', $a['class'], $a['id']);
-            break;
-        case 'icon_small':
-            $out = icon_builder('open', 'small', $a['class'], $a['id']);
-            break;
-        case 'text':
-            $out = $options['textstatus_open_string'];
-            break;
-        default:
-            $out = "undefined shortcode param";
-            break;
-        }
-
-    }
-    else {
-
-        switch( $a['type'] ) {
-        case 'icon_large':
-            $out = icon_builder('closed', 'large', $a['class'], $a['id']);
-            break;
-        case 'icon_small':
-            $out = icon_builder('closed', 'small', $a['class'], $a['id']);
-            break;
-        case 'text':
-            $out = $options['textstatus_closed_string'];
-            break;
-        default:
-            $out = "undefined shortcode param";
-            break;
-        }
-
+    switch( $a['type'] ) {
+    case 'icon_large':
+        $out = icon_builder(
+            $status ? 'open' : 'closed',
+            'large',
+            $a['class'],
+            $a['id']);
+        break;
+    case 'icon_small':
+        $out = icon_builder(
+            $status ? 'open' : 'closed',
+            'small',
+            $a['class'],
+            $a['id']);
+        break;
+    case 'text':
+        $out = $options[$status ? 'textstatus_open_string' : 'textstatus_closed_string'];
+        break;
+    default:
+        $out = "undefined shortcode param";
+        break;
     }
 
     return $out;
