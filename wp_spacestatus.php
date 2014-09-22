@@ -28,86 +28,59 @@
  *  License: GPL2
  */
 
+include('space_api.php');
 include('settings.php');
 
 
-function get_spacestatus() {
+// icon builds the HTML for a status icon.
+function icon($status, $options, $sc_attrs) {
 
-    $options = get_option('wp_spacestatus_options');
+    $src   = $options["icon_".$status."_url"];
+    $alt   = "Status icon '$status'";
+    $style = "";
 
-    // FIXME set timeout, useragent, etc.
-    $api_response = wp_remote_get( $options['api_url_string'] );
+    if( $sc_attrs['width'] != '' )  $style = "width: {$sc_attrs['width']}; ";
+    if( $sc_attrs['height'] != '' ) $style = $style."height: {$sc_attrs['height']};";
 
-    $rsp_code = wp_remote_retrieve_response_code( &$api_response );
-    $rsp_msg  = wp_remote_retrieve_response_message( &$api_response );
-    $rsp_body = wp_remote_retrieve_body( &$api_response );
-
-    if( $rsp_code != 200) {
-        return new WP_ERROR(
-            'api_call_failed',
-            "Failed calling ".$options['api_url_string'],
-            $rsp_msg );
-    }
-
-    return json_decode( $rsp_body )->open;
+    return "<img src=\"$src\" alt=\"$alt\" style=\"$style\" class=\"{$sc_attrs['class']}\" id=\"{$sc_attrs['id']}\" />";
 }
 
-
-function icon_builder($status, $size, $class, $id) {
-
-    // TODO get icons from options.
-    $icon['open']['large']   = "open_large.png";
-    $icon['open']['small']   = "open_small.png";
-    $icon['closed']['large'] = "closed_large.png";
-    $icon['closed']['small'] = "closed_small.png";
-
-    $icon_baseurl = plugins_url()."/wp_spacestatus/icons";
-
-    return "<img id=\"$id\" class=\"$class\" src=\"".$icon_baseurl."/".$icon[$status][$size]."\" alt=\"Space status $status icon\" />";
-}
-
-
+// spacestatus_shortcode() is the shortcode callback.
 function spacestatus_shortcode( $atts ) {
 
-    $options = get_option('wp_spacestatus_options');
-
     $a = shortcode_atts( array(
-        'type'  => 'icon_large',
-        'class' => '',
-        'id'    => '',
+        'type'   => 'icon', // short code type defaults to icon.
+        'width'  => '',
+        'height' => '',
+        'class'  => '',
+        'id'     => '',
     ), $atts );
 
-    $status = get_spacestatus();
+    // Validate short code type attr.
+    if( $a['type'] != 'text' && $a['type'] != 'icon' ) return "Invalid short code attr.";
 
-    if( is_wp_error( $status ) ) {
-        // FIXME return the unknown icon
-        return $status->get_error_message();
+    $options  = get_option('wp_spacestatus_options');
+    $response = callAPI($options['api_url_string']);
+
+    // Error occurred, return unknown status.
+    if( is_wp_error( $response ) ) {
+        if( $a['type'] == 'icon' ) {
+            return icon('unknown', $options, $a);
+        }
+        return $options['textstatus_unknown_string'];
     }
 
-    switch( $a['type'] ) {
-    case 'icon_large':
-        $out = icon_builder(
-            $status ? 'open' : 'closed',
-            'large',
-            $a['class'],
-            $a['id']);
-        break;
-    case 'icon_small':
-        $out = icon_builder(
-            $status ? 'open' : 'closed',
-            'small',
-            $a['class'],
-            $a['id']);
-        break;
-    case 'text':
-        $out = $options[$status ? 'textstatus_open_string' : 'textstatus_closed_string'];
-        break;
-    default:
-        $out = "undefined shortcode param";
-        break;
+    // return icon.
+    if( $a['type'] == 'icon' ) {
+        return icon(
+            $response->getSpaceStatus() ? 'open' : 'closed',
+            $options,
+            $a);
     }
 
-    return $out;
+    // return text.
+    if( $response->getSpaceStatus() ) return $options['textstatus_open_string'];
+    return $options['textstatus_closed_string'];
 }
 
 add_shortcode('space_status', 'spacestatus_shortcode');
