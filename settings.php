@@ -31,7 +31,7 @@ function wp_spacestatus_options_page() {
 ?>
     <div>
         <h1>WP SpaceStatus Settings</h1>
-        <p>Use the template tag <code>[space_status]</code> anywere on your blog (page, article, widget)
+        <p>Use the <code>[space_status]</code> template tag anywere on your blog (page, article, widget)
             to display the current status for your Hackerspace.<br />
             To customize the output you can use different attributes as there are: <em>type=icon/text, width, height, class, id</em>.
         <p>Example: <code>[space_status width=50px class=alignleft]</code></p>
