@@ -24,9 +24,9 @@ function callAPI($url) {
     // FIXME set timeout, useragent, etc.
     $api_response = wp_remote_get( $url );
 
-    $rsp_code = wp_remote_retrieve_response_code( &$api_response );
-    $rsp_msg  = wp_remote_retrieve_response_message( &$api_response );
-    $rsp_body = wp_remote_retrieve_body( &$api_response );
+    $rsp_code = wp_remote_retrieve_response_code( $api_response );
+    $rsp_msg  = wp_remote_retrieve_response_message( $api_response );
+    $rsp_body = wp_remote_retrieve_body( $api_response );
 
     // If request wasn't successfull return error.
     if( $rsp_code != 200) {
