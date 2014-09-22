@@ -3,6 +3,8 @@ WP SpaceStatus
 
 A simple WordPress SpaceAPI plugin that provides a template tag to display the space status.
 
+![screenshot](misc/screenshot_settings.png)
+
 **Features**
   * Calls SpaceAPI server-side, no JavaScript required.
   * Customizable template tag to display an icon or a text state.
