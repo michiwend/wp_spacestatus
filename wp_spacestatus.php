@@ -37,12 +37,13 @@ function icon($status, $options, $sc_attrs) {
 
     $src   = $options["icon_".$status."_url"];
     $alt   = "Status icon '$status'";
+    $title = "Status: ".$options['textstatus_'.$status.'_string'];
     $style = "";
 
     if( $sc_attrs['width'] != '' )  $style = "width: {$sc_attrs['width']}; ";
     if( $sc_attrs['height'] != '' ) $style = $style."height: {$sc_attrs['height']};";
 
-    return "<img src=\"$src\" alt=\"$alt\" style=\"$style\" class=\"{$sc_attrs['class']}\" id=\"{$sc_attrs['id']}\" />";
+    return "<img src=\"$src\" alt=\"$alt\" title=\"$title\" style=\"$style\" class=\"{$sc_attrs['class']}\" id=\"{$sc_attrs['id']}\" />";
 }
 
 // spacestatus_shortcode() is the shortcode callback.
