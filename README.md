@@ -3,19 +3,27 @@ WP SpaceStatus
 
 A simple WordPress SpaceAPI plugin that provides a template tag to display the space status.
 
-**What does work**
-  * Call SpaceAPI and display two different icons or a text state.
-  * Provides a plugin settings page to set the SpaceAPI URL.
+**Features**
+  * Calls SpaceAPI server-side, no JavaScript required.
+  * Customizable template tag to display an icon or a text state.
+  * Plugin settings page to set the SpaceAPI and output options.
 
-**What doesn't**
-  * Let the user upload status icons
+**To be implemented**
+  * Make use of WordPress´ media uploader to upload icons.
+  * Option "use SpaceAPI icons"
 
 
 #Usage
 
-Just put the short code anywere in your page to display the space status.
+Just put the short code anywere on your WordPress page (e.g. article, page, widget) to display the space status.
+
+**Attributes**
+```
+type=icon/text, width, height, class, id
+```
+**Examples**
 ```
 [space_status]
-[space_status type=icon_small}
 [space_status type=text]
+[space_status type=icon width=50px class=alignleft]
 ```
