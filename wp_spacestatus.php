@@ -71,17 +71,26 @@ function spacestatus_shortcode( $atts ) {
         return $options['textstatus_unknown_string'];
     }
 
+    if($response->getSpaceStatus() === true) {
+        $icon_type = "open";
+        $text_type = "textstatus_open_string";
+    }
+    else if($response->getSpaceStatus() === false) {
+        $icon_type = "closed";
+        $text_type = "textstatus_closed_string";
+    }
+    else {
+        $icon_type = "unknown";
+        $text_type = "textstatus_unknown_string";
+    }
+
     // return icon.
     if( $a['type'] == 'icon' ) {
-        return icon(
-            $response->getSpaceStatus() ? 'open' : 'closed',
-            $options,
-            $a);
+        return icon($icon_type, $options, $a);
     }
 
     // return text.
-    if( $response->getSpaceStatus() ) return $options['textstatus_open_string'];
-    return $options['textstatus_closed_string'];
+    return $options[$text_type];
 }
 
 add_shortcode('space_status', 'spacestatus_shortcode');
