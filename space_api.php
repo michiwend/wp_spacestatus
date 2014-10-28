@@ -80,6 +80,15 @@ class APIResponse {
             return $this->rsp->state->icon->closed;
         }
     }
+
+    function getLastChange() {
+        if( $this->getAPIVersion() < 13 ) {
+            return $this->rsp->lastchange;
+        }
+        else {
+            return $this->rsp->state->lastchange;
+        }
+    }
 }
 
 ?>

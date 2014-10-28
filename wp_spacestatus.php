@@ -93,6 +93,18 @@ function spacestatus_shortcode( $atts ) {
     return $options[$text_type];
 }
 
+
+function lastchange_shortcode( $atts ) {
+    
+    $options  = get_option('wp_spacestatus_options');
+    $response = callAPI($options['api_url_string']);
+
+    date_default_timezone_set(get_option('timezone_string'));
+    return strftime($options['lastchange_date_format'], $response->getLastChange());
+
+}
+
 add_shortcode('space_status', 'spacestatus_shortcode');
+add_shortcode('space_lastchange', 'lastchange_shortcode');
 
 ?>

@@ -149,6 +149,14 @@ function wp_spacestatus_icon_unknown_url() {
     //echo "<input style=\"margin-left: 20px;\" type=\"button\" class=\"button button-primary\" value=\"Upload one...\"  />";
 }
 
+function wp_spacestatus_lastchange_date_format() {
+    $option = get_option_or_default('lastchange_date_format', '%H:%M');
+
+    echo "<input id='wp_spacestatus_lastchange_date_format'
+            name='wp_spacestatus_options[lastchange_date_format]'
+            size='20' type='text' value='$option' />";
+}
+
 // add the admin settings and such
 add_action('admin_init', 'plugin_admin_init');
 function plugin_admin_init() {
@@ -164,6 +172,7 @@ function plugin_admin_init() {
     add_settings_field('wp_spacestatus_icon_open_url', 'Icon <em>open</em>', 'wp_spacestatus_icon_open_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_closed_url', 'Icon <em>closed</em>', 'wp_spacestatus_icon_closed_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_unknown_url', 'Icon <em>unknown</em>', 'wp_spacestatus_icon_unknown_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_lastchange_date_format', 'Date Format (see PHP strftime)', 'wp_spacestatus_lastchange_date_format', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
 }
 
 // validate our options
@@ -178,6 +187,8 @@ function plugin_options_validate($input) {
     $newinput['icon_open_url']    = $input['icon_open_url']; //FIXME validate
     $newinput['icon_closed_url']  = $input['icon_closed_url']; //FIXME validate
     $newinput['icon_unknown_url'] = $input['icon_unknown_url']; //FIXME validate
+    
+    $newinput['lastchange_date_format'] = $input['lastchange_date_format']; //FIXME validate
 
     return $newinput;
 }
