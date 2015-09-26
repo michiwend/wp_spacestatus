@@ -30,6 +30,7 @@
 
 include('space_api.php');
 include('settings.php');
+include('widget.php');
 
 
 // icon builds the HTML for a status icon.
