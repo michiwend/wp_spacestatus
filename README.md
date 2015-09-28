@@ -28,4 +28,5 @@ type=icon/text, width, height, class, id
 [space_status]
 [space_status type=text]
 [space_status type=icon width=50px class=alignleft]
+[space_lastchange]
 ```
