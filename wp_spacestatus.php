@@ -30,6 +30,7 @@
 
 include('space_api.php');
 include('settings.php');
+include('widget.php');
 
 $response = null;
 
