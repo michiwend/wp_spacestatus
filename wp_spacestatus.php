@@ -31,6 +31,7 @@
 include('space_api.php');
 include('settings.php');
 
+$response = null;
 
 // icon builds the HTML for a status icon.
 function icon($status, $options, $sc_attrs) {
@@ -49,6 +50,8 @@ function icon($status, $options, $sc_attrs) {
 // spacestatus_shortcode() is the shortcode callback.
 function spacestatus_shortcode( $atts ) {
 
+    global $response;
+
     $a = shortcode_atts( array(
         'type'   => 'icon', // short code type defaults to icon.
         'width'  => '',
@@ -61,7 +64,9 @@ function spacestatus_shortcode( $atts ) {
     if( $a['type'] != 'text' && $a['type'] != 'icon' ) return "Invalid short code attr.";
 
     $options  = get_option('wp_spacestatus_options');
-    $response = callAPI($options['api_url_string']);
+    if ($response === null) {
+        $response = callAPI($options['api_url_string']);
+    }
 
     // Error occurred, return unknown status.
     if( is_wp_error( $response ) ) {
@@ -95,9 +100,14 @@ function spacestatus_shortcode( $atts ) {
 
 
 function lastchange_shortcode( $atts ) {
-    
+
+    global $response;
+
     $options  = get_option('wp_spacestatus_options');
-    $response = callAPI($options['api_url_string']);
+
+    if ($response === null) {
+        $response = callAPI($options['api_url_string']);
+    }
 
     date_default_timezone_set(get_option('timezone_string'));
     return strftime($options['lastchange_date_format'], $response->getLastChange());
