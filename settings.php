@@ -121,6 +121,18 @@ function wp_spacestatus_icon_open_url() {
     //echo "<input style=\"margin-left: 20px;\" type=\"button\" class=\"button button-primary\" value=\"Upload one...\"  />";
 }
 
+function wp_spacestatus_use_spaceapi_icons() {
+
+    $option = get_option_or_default('use_spaceapi_icons', 'spaceapi');
+
+    echo '<input id="wp_spacestatus_use_spaceapi_icons_spaceapi" name="wp_spacestatus_options[use_spaceapi_icons]" ' .
+            'type="radio" value="spaceapi"' . ($option === 'spaceapi' ? ' checked="checked"' : '') . ' />' .
+            '<label for="wp_spacestatus_use_spaceapi_icons_spaceapi">Use SpaceAPI icons<label><br />';
+    echo '<input id="wp_spacestatus_use_spaceapi_icons_manuel" name="wp_spacestatus_options[use_spaceapi_icons]" ' .
+            'type="radio" value="manuel"' . ($option === 'manuel' ? ' checked="checked"' : '') . ' />' .
+            '<label for="wp_spacestatus_use_spaceapi_icons_manuel">Set icons manuelly<label>';
+}
+
 function wp_spacestatus_icon_closed_url() {
 
     $option = get_option_or_default(
@@ -169,6 +181,7 @@ function plugin_admin_init() {
     add_settings_field('wp_spacestatus_textstatus_open', 'Text status <em>open</em>', 'wp_spacestatus_textstatus_open_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_textstatus_closed', 'Text status <em>closed</em>', 'wp_spacestatus_textstatus_closed_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_textstatus_unknown', 'Text status <em>unknown</em>', 'wp_spacestatus_textstatus_unknown_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_use_spaceapi_icons', 'Use SpaceAPI icons', 'wp_spacestatus_use_spaceapi_icons', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_open_url', 'Icon <em>open</em>', 'wp_spacestatus_icon_open_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_closed_url', 'Icon <em>closed</em>', 'wp_spacestatus_icon_closed_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_unknown_url', 'Icon <em>unknown</em>', 'wp_spacestatus_icon_unknown_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
@@ -184,6 +197,7 @@ function plugin_options_validate($input) {
     $newinput['textstatus_closed_string'] = $input['textstatus_closed_string']; //FIXME validate
     $newinput['textstatus_unknown_string'] = $input['textstatus_unknown_string']; //FIXME validate
 
+    $newinput['use_spaceapi_icons'] = $input['use_spaceapi_icons']; //FIXME validate
     $newinput['icon_open_url']    = $input['icon_open_url']; //FIXME validate
     $newinput['icon_closed_url']  = $input['icon_closed_url']; //FIXME validate
     $newinput['icon_unknown_url'] = $input['icon_unknown_url']; //FIXME validate

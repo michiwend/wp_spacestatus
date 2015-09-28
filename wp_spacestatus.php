@@ -34,9 +34,8 @@ include('settings.php');
 $response = null;
 
 // icon builds the HTML for a status icon.
-function icon($status, $options, $sc_attrs) {
+function icon($status, $src, $options, $sc_attrs) {
 
-    $src   = $options["icon_".$status."_url"];
     $alt   = "Status icon '$status'";
     $title = "Status: ".$options['textstatus_'.$status.'_string'];
     $style = "";
@@ -71,27 +70,38 @@ function spacestatus_shortcode( $atts ) {
     // Error occurred, return unknown status.
     if( is_wp_error( $response ) ) {
         if( $a['type'] == 'icon' ) {
-            return icon('unknown', $options, $a);
+            $src = $options["icon_unknown_url"];
+            return icon($status, $src, $options, $a);
         }
         return $options['textstatus_unknown_string'];
     }
 
     if($response->getSpaceStatus() === true) {
-        $icon_type = "open";
+        $status = "open";
         $text_type = "textstatus_open_string";
     }
     else if($response->getSpaceStatus() === false) {
-        $icon_type = "closed";
+        $status = "closed";
         $text_type = "textstatus_closed_string";
     }
     else {
-        $icon_type = "unknown";
+        $status = "unknown";
         $text_type = "textstatus_unknown_string";
     }
 
     // return icon.
     if( $a['type'] == 'icon' ) {
-        return icon($icon_type, $options, $a);
+        if ($options['use_spaceapi_icons'] === 'spaceapi') {
+            if ($status === 'open') {
+                $src = $response->getIconOpen();
+            } else {
+                $src = $response->getIconClosed();
+            }
+            return icon($status, $src, $options, $a);
+        } else {
+            $src = $options["icon_" . $status . "_url"];
+            return icon($status, $src, $options, $a);
+        }
     }
 
     // return text.
