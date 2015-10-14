@@ -128,4 +128,11 @@ function lastchange_shortcode( $atts ) {
 add_shortcode('space_status', 'spacestatus_shortcode');
 add_shortcode('space_lastchange', 'lastchange_shortcode');
 
+function spacestatus_head_link() {
+    $options  = get_option('wp_spacestatus_options');
+    echo '<link rel="space-api" title="Hackerspace API Endpoint" type="application/json" href="' . $options['api_url_string'] . '"/>'. "\n";
+}
+
+add_action('wp_head', 'spacestatus_head_link');
+
 ?>
