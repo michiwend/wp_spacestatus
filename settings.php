@@ -16,6 +16,8 @@
  *
  *  Authors:
  *      Michael Wendland <michael@michiwend.com>
+ *      Peter Grassberger <petertheone@gmail.com>
+ *      Stefan More <dev+github@2904.cc>
  */
 
 require_once('space_api.php');
@@ -133,6 +135,15 @@ function wp_spacestatus_use_spaceapi_icons() {
             '<label for="wp_spacestatus_use_spaceapi_icons_manuel">Set icons manuelly<label>';
 }
 
+function wp_spacestatus_force_protocol_relative() {
+
+    $option = get_option_or_default('force_protocol_relative', 'false');
+
+    echo '<input id="wp_spacestatus_force_protocol_relative" name="wp_spacestatus_options[force_protocol_relative]" ' .
+            'type="checkbox" value="true"' . ($option === 'true' ? ' checked="checked"' : '') . ' />' .
+            '<label for="wp_spacestatus_use_spaceapi_icons_spaceapi">replace "http://" by "//" in image URLs.<label><br />';
+}
+
 function wp_spacestatus_icon_closed_url() {
 
     $option = get_option_or_default(
@@ -182,6 +193,7 @@ function plugin_admin_init() {
     add_settings_field('wp_spacestatus_textstatus_closed', 'Text status <em>closed</em>', 'wp_spacestatus_textstatus_closed_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_textstatus_unknown', 'Text status <em>unknown</em>', 'wp_spacestatus_textstatus_unknown_string', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_use_spaceapi_icons', 'Use SpaceAPI icons', 'wp_spacestatus_use_spaceapi_icons', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
+    add_settings_field('wp_spacestatus_force_protocol_relative', 'Force procol-relative URL', 'wp_spacestatus_force_protocol_relative', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_open_url', 'Icon <em>open</em>', 'wp_spacestatus_icon_open_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_closed_url', 'Icon <em>closed</em>', 'wp_spacestatus_icon_closed_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
     add_settings_field('wp_spacestatus_icon_unknown_url', 'Icon <em>unknown</em>', 'wp_spacestatus_icon_unknown_url', 'wp_spacestatus', 'wp_spacestatus_appearance_section');
@@ -198,10 +210,11 @@ function plugin_options_validate($input) {
     $newinput['textstatus_unknown_string'] = $input['textstatus_unknown_string']; //FIXME validate
 
     $newinput['use_spaceapi_icons'] = $input['use_spaceapi_icons']; //FIXME validate
+    $newinput['force_protocol_relative'] = $input['force_protocol_relative']; //FIXME validate
     $newinput['icon_open_url']    = $input['icon_open_url']; //FIXME validate
     $newinput['icon_closed_url']  = $input['icon_closed_url']; //FIXME validate
     $newinput['icon_unknown_url'] = $input['icon_unknown_url']; //FIXME validate
-    
+
     $newinput['lastchange_date_format'] = $input['lastchange_date_format']; //FIXME validate
 
     return $newinput;

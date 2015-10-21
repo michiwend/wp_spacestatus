@@ -16,6 +16,8 @@
  *
  *  Authors:
  *      Michael Wendland <michael@michiwend.com>
+ *      Peter Grassberger <petertheone@gmail.com>
+ *      Stefan More <dev+github@2904.cc>
  */
 
 /*
@@ -43,6 +45,10 @@ function icon($status, $src, $options, $sc_attrs) {
 
     if( $sc_attrs['width'] != '' )  $style = "width: {$sc_attrs['width']}; ";
     if( $sc_attrs['height'] != '' ) $style = $style."height: {$sc_attrs['height']};";
+
+    if($options['force_protocol_relative'] === 'true') {
+        $src = str_replace("http:", "", $src);
+    }
 
     return "<img src=\"$src\" alt=\"$alt\" title=\"$title\" style=\"$style\" class=\"{$sc_attrs['class']}\" id=\"{$sc_attrs['id']}\" />";
 }
@@ -130,7 +136,9 @@ add_shortcode('space_lastchange', 'lastchange_shortcode');
 
 function spacestatus_head_link() {
     $options  = get_option('wp_spacestatus_options');
-    echo '<link rel="space-api" title="Hackerspace API Endpoint" type="application/json" href="' . $options['api_url_string'] . '"/>'. "\n";
+
+    $url = $options['force_protocol_relative'] === 'true' ? str_replace("http:", "", $options['api_url_string']) : $options['api_url_string'];
+    echo '<link rel="space-api" title="Hackerspace API Endpoint" type="application/json" href="' . $url . '"/>'. "\n";
 }
 
 add_action('wp_head', 'spacestatus_head_link');
