@@ -16,6 +16,8 @@
  *
  *  Authors:
  *      Michael Wendland <michael@michiwend.com>
+ *      Peter Grassberger <petertheone@gmail.com>
+ *      Stefan More <dev+github@2904.cc>
  */
 
 require_once('space_api.php');
