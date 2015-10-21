@@ -44,6 +44,10 @@ function icon($status, $src, $options, $sc_attrs) {
     if( $sc_attrs['width'] != '' )  $style = "width: {$sc_attrs['width']}; ";
     if( $sc_attrs['height'] != '' ) $style = $style."height: {$sc_attrs['height']};";
 
+    if($options['force_protocol_relative'] === 'true') {
+        $src = str_replace("http:", "", $src);
+    }
+
     return "<img src=\"$src\" alt=\"$alt\" title=\"$title\" style=\"$style\" class=\"{$sc_attrs['class']}\" id=\"{$sc_attrs['id']}\" />";
 }
 
